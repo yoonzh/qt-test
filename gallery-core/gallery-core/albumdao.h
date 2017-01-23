@@ -1,6 +1,7 @@
 ﻿#ifndef ALBUMDAO_H
 #define ALBUMDAO_H
 
+#include <memory>
 #include <QVector>
 
 class QSqlDatabase;

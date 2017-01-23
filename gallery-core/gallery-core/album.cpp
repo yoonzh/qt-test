@@ -7,6 +7,11 @@ Album::Album(const QString & name)
 {
 }
 
+int Album::id() const
+{
+	return mId;
+}
+
 void Album::setId(int id)
 {
 	mId = id;

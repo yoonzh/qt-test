@@ -19,6 +19,7 @@ void AlbumDao::init() const
 	{
 		QSqlQuery query(mDatabase);
 		query.exec("CREATE TABLE albums (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)");
+		DatabaseManager::debugQuery(query);
 	}
 }
 
@@ -29,6 +30,26 @@ void AlbumDao::addAlbum(Album & album) const
 	query.bindValue(":name", album.name());
 	query.exec();
 	album.setId(query.lastInsertId().toInt());
+	DatabaseManager::debugQuery(query);
+}
+
+void AlbumDao::updateAlbum(const Album& album)const
+{
+	QSqlQuery query(mDatabase);
+	query.prepare("UPDATE albums SET name = (:name) WHERE id = (:id)");
+	query.bindValue(":name", album.name());
+	query.bindValue(":id", album.id());
+	query.exec();
+	DatabaseManager::debugQuery(query);
+}
+
+void AlbumDao::removeAlbum(int id) const
+{
+	QSqlQuery query(mDatabase);
+	query.prepare("DELETE FROM albums WHERE id = (:id)");
+	query.bindValue(":id", id);
+	query.exec();
+	DatabaseManager::debugQuery(query);
 }
 
 unique_ptr<vector<unique_ptr<Album>>> AlbumDao::albums() const

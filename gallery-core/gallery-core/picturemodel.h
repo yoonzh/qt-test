@@ -1,6 +1,8 @@
 ﻿#ifndef PICTUREMODEL_H
 #define PICTUREMODEL_H
 
+#include <memory>
+#include <vector>
 #include <QAbstractListModel>
 
 #include "gallery-core_global.h"
@@ -14,7 +16,10 @@ class GALLERYCORESHARED_EXPORT PictureModel : public QAbstractListModel
 {
 	Q_OBJECT
 public:
-	enum pictureRole { FilePathRole = Qt::UserRole + 1 };
+	enum Roles {
+		UrlRole = Qt::UserRole + 1,
+		FilePathRole
+	};
 
 public:
 	PictureModel(const AlbumModel & model, QObject * parent = 0);
@@ -24,21 +29,22 @@ public:
 	int rowCount(const QModelIndex & parent = QModelIndex()) const override;
 	QVariant data(const QModelIndex & index, int role) const override;
 	bool removeRows(int row, int count, const  QModelIndex & parent) override;
+	QHash<int, QByteArray> roleNames() const override;
 
 	void setAlbumId(int albumId);
 	void clearAlbum();
 
 public slots:
-	void deletePicturesFromAlbum();
+	void deletePicturesForAlbum();
 
 private:
-	void loopPictures(int alumbId);
+	void loadPictures(int alumbId);
 	bool isIndexValid(const QModelIndex & index) const;
 
 private:
 	DatabaseManager & mDB;
 	int mAlbumId;
-	std::unique_ptr<std::vector<std::unique_ptr<Picture>>> mPicture;
+	std::unique_ptr<std::vector<std::unique_ptr<Picture>>> mPictures;
 };
 
 #endif // PICTUREMODEL_H
